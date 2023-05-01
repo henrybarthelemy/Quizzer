@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 40,
         paddingHorizontal: 40,
-        paddingTop: 20,
+        paddingVertical: 20,
         height: '100%',
     },
     bannerWrapper: {
