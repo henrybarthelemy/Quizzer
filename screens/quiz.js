@@ -1,11 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Title from '../components/title';
-
-
   
 const Quiz = ({navigation}) => {
-    const amountOfQuestions = 10;
+    const AMOUNT_OF_QUESTIONS = 10;
     const [questions, setQuestions] = useState();
     const [quesIdx, setQuesIdx] = useState(0);
     const [option, setOption] = useState([])
@@ -13,7 +11,7 @@ const Quiz = ({navigation}) => {
     const [numberCorrect, setNumberCorrect] = useState(0)
 
     const getQuiz = async () => {
-        const url= 'https://opentdb.com/api.php?amount=' + amountOfQuestions + '&type=multiple&encode=url3986';
+        const url= 'https://opentdb.com/api.php?amount=' + AMOUNT_OF_QUESTIONS + '&type=multiple&encode=url3986';
         const response = await fetch(url);
         const data = await response.json();
         setQuestions(data.results)
@@ -41,7 +39,7 @@ const Quiz = ({navigation}) => {
     }
 
     const handleSkip = () => {
-        if (quesIdx < amountOfQuestions - 1) {
+        if (quesIdx < AMOUNT_OF_QUESTIONS - 1) {
             setQuesIdx(quesIdx + 1);
             setSelectedIndex(null);
             setOption(generateOptionsAndShuffle(questions[quesIdx + 1]));
@@ -55,7 +53,7 @@ const Quiz = ({navigation}) => {
         console.log(finalNumberCorrect);
         navigation.navigate('Result', {
             numCorrect: finalNumberCorrect, 
-            total: amountOfQuestions});
+            total: AMOUNT_OF_QUESTIONS});
     }
 
     const isCorrect = () => {
@@ -70,12 +68,19 @@ const Quiz = ({navigation}) => {
         return options;
     }
 
+    
     return(
         <View style={styles.container}>
             
             {questions && 
             <>
             <View style={styles.top}>
+                <View style={{ flexDirection: "row", backgroundColor: "lightgray", borderRadius: 4, overflow: 'hidden',  }}>
+                    <View style={{ flex: quesIdx / AMOUNT_OF_QUESTIONS, height: 30, backgroundColor: "#1A759F" }} />
+                    <View style={{ flex: 1 - (quesIdx / AMOUNT_OF_QUESTIONS) }} />
+                </View>
+            </View>
+            <View style={styles.middle}>
                 <Text style={styles.questionText}>Q. {decodeURIComponent(questions[quesIdx].question)}</Text>
             </View>
             <View style={styles.options}>
@@ -91,7 +96,7 @@ const Quiz = ({navigation}) => {
                 <TouchableOpacity style={styles.button} onPress={handleSkip}>
                     <Text style={styles.buttonText}>SKIP</Text>
                 </TouchableOpacity>
-                {quesIdx < amountOfQuestions - 1 ?
+                {quesIdx < AMOUNT_OF_QUESTIONS - 1 ?
                 <TouchableOpacity style={selectedIndex == null ? styles.disabledbutton : styles.button} disabled={selectedIndex == null} onPress={handleNextPress}>
                 <Text style={styles.buttonText}>NEXT</Text>
             </TouchableOpacity> : 
@@ -140,8 +145,16 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     top: {
-        marginVertical: 20
+        marginVertical: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    middle: {
+        
     }, 
+    progressBar: {
+        width: '100%'
+    },
     options: {
         marginVertical: 16,
         flex: 1
